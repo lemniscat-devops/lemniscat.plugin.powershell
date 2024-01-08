@@ -62,10 +62,10 @@ class Powershell:
         return ret_code, out, err, outputVar
 
     def run(self, command):
-        return self.cmd(['powershell', '-Command', command])
+        return self.cmd(['pwsh', '-Command', command])
 
     def run_script(self, script):
-        return self.cmd(["powershell", "-File", script])
+        return self.cmd(["pwsh", "-File", script])
 
     def run_script_with_args(self, script, args):
-        return self.cmd(["powershell", "-File", script, args])
+        return self.cmd(["pwsh", "-File", script, args])
