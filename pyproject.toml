@@ -3,12 +3,12 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "lemniscat.plugin.terraform"
+name = "lemniscat.plugin.powershell"
 version = "0.0.1"
 authors = [
   { name="Philippe MORISSEAU", email="philippe.morisseau@outlook.com" },
 ]
-description = "A runtime to provide product oriented in DevOps approach"
+description = "A lemniscat plugin to run powershell scripts"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
@@ -20,8 +20,8 @@ classifiers = [
 dynamic = ["dependencies"]
 
 [project.urls]
-Homepage = "https://github.com/lemniscat-devops/lemniscat.plugin.terraform"
-Issues = "https://github.com/lemniscat-devops/lemniscat.plugin.terraform/issues"
+Homepage = "https://github.com/lemniscat-devops/lemniscat.plugin.powershell"
+Issues = "https://github.com/lemniscat-devops/lemniscat.plugin.powershell/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -32,7 +32,7 @@ where = ["src"]
 include = ["lemniscat*"]
 
 [tool.setuptools.package-data]
-"lemniscat.plugin.terraform" = ["plugin.yaml", "plugin.yml"]
+"lemniscat.plugin.powershell" = ["plugin.yaml", "plugin.yml"]
 
 [tool.setuptools.dynamic]
-dependencies = {file = ["src/lemniscat/plugin/terraform/requirements.txt"]}
+dependencies = {file = ["src/lemniscat/plugin/powershell/requirements.txt"]}
