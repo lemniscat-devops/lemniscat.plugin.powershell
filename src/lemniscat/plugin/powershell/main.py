@@ -3,6 +3,7 @@ import argparse
 import ast
 import logging
 import os
+import re
 from logging import Logger
 from lemniscat.core.contract.engine_contract import PluginCore
 from lemniscat.core.model.models import Meta, TaskResult
@@ -10,6 +11,7 @@ from lemniscat.core.util.helpers import FileSystem, LogUtil
 
 from lemniscat.plugin.powershell.powershell import Powershell
 
+_REGEX_CAPTURE_VARIABLE = r"(?:\${{(?P<var>[^}]+)}})"
 
 class Action(PluginCore):
 
@@ -22,20 +24,35 @@ class Action(PluginCore):
             description=manifest_data['description'],
             version=manifest_data['version']
         )
+        
+    def __interpret(self, script: str, variables: dict) -> str:
+        if(script is None):
+            return None
+        if(isinstance(script, str)):
+            matches = re.findall(_REGEX_CAPTURE_VARIABLE, script)
+            if(len(matches) > 0):
+                for match in matches:
+                    var = str.strip(match)
+                    if(var in variables):
+                        script = script.replace(f'${{{{{match}}}}}', variables[var])
+                        self._logger.debug(f"Interpreting variable: {var} -> {variables[var]}")
+        return script    
 
     def __run_powershell(self, parameters: dict = {}, variables: dict = {}) -> TaskResult:
         # launch powershell command
         pwsh = Powershell()
         result = {}
-        if(parameters['type'] == 'InlineScript'):
-            result = pwsh.run(parameters['script'])
-        elif(parameters['type'] == 'FileScript'):
+        if(parameters['type'] == 'inline'):
+            script = self.__interpret(parameters['script'], variables)
+            result = pwsh.run(script)
+        elif(parameters['type'] == 'file'):
             if(parameters.keys.__contains__('args')):
                 result = pwsh.run_script_with_args(parameters['filePath'], parameters['args'])
             else:    
                 result= pwsh.run_script(parameters['filePath'])
-           
-        super().appendVariables(result[3])  
+        
+        if(result[3] is not None):   
+            super().appendVariables(result[3])  
                 
         if(result[0] != 0):
             return TaskResult(
