@@ -45,7 +45,7 @@ class Powershell:
                 ltrace = line.decode('utf-8').replace('\n', '')
                 m = re.match(r"^\[lemniscat\.pushvar\] (?P<key>\w+)=(?P<value>.*)", str(ltrace))
                 if(not m is None):
-                    outputVar[m.group('key')] = m.group('value')
+                    outputVar[m.group('key').strip()] = m.group('value').strip()
                 else:
                     log.debug(f'  {ltrace}')
         
