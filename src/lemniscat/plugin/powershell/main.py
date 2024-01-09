@@ -44,6 +44,10 @@ class Action(PluginCore):
         result = {}
         if(parameters['type'] == 'inline'):
             script = self.__interpret(parameters['script'], variables)
+            self._logger.debug("---------------------------")
+            self._logger.debug("Interpreted script:")
+            self._logger.debug(f"{script}")
+            self._logger.debug("---------------------------")
             result = pwsh.run(script)
         elif(parameters['type'] == 'file'):
             if(parameters.keys.__contains__('args')):
