@@ -42,7 +42,7 @@ class Powershell:
         while p.poll() is None:
             line = p.stdout.readline()
             if(line != b''):
-                ltrace = line.decode('utf-8').replace('\n', '')
+                ltrace = line.decode('utf-8').rstrip('\r\n')
                 m = re.match(r"^\[lemniscat\.pushvar\] (?P<key>\w+)=(?P<value>.*)", str(ltrace))
                 if(not m is None):
                     outputVar[m.group('key').strip()] = m.group('value').strip()
