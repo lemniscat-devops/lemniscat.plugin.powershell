@@ -36,6 +36,9 @@ class Action(PluginCore):
                     if(var in variables):
                         script = script.replace(f'${{{{{match}}}}}', variables[var])
                         self._logger.debug(f"Interpreting variable: {var} -> {variables[var]}")
+                    else:
+                        script = script.replace(f'${{{{{match}}}}}', "")
+                        self._logger.debug(f"Variable not found: {var}. Replaced by empty string.")
         return script    
 
     def __run_powershell(self, parameters: dict = {}, variables: dict = {}) -> TaskResult:
@@ -46,6 +49,7 @@ class Action(PluginCore):
             script = self.__interpret(parameters['script'], variables)
             self._logger.debug("---------------------------")
             self._logger.debug("Interpreted script: ")
+            script = script.replace("'", "\"")
             self._logger.debug(f"{script}")
             self._logger.debug("---------------------------")
             result = pwsh.run(script)
