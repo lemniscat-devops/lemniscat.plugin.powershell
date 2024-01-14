@@ -37,10 +37,11 @@ class Powershell:
             environ_vars = os.environ.copy()
 
         p = subprocess.Popen(cmds, stdout=stdout, stderr=stderr,
-                             cwd=None)
+                             cwd=None, shell=True)
         
         while p.poll() is None:
             line = p.stdout.readline()
+            error = p.stderr.readline()
             if(line != b''):
                 ltrace = line.decode('utf-8').rstrip('\r\n')
                 m = re.match(r"^\[lemniscat\.pushvar\] (?P<key>\w+)=(?P<value>.*)", str(ltrace))
@@ -48,6 +49,9 @@ class Powershell:
                     outputVar[m.group('key').strip()] = m.group('value').strip()
                 else:
                     log.debug(f'  {ltrace}')
+            if(error != b''):
+                etrace = error.decode("utf-8").rstrip("\r\n")
+                log.error(f'  {etrace}')
         
         out, err = p.communicate()
         ret_code = p.returncode
