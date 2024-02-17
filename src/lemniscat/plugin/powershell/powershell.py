@@ -37,7 +37,7 @@ class Powershell:
             environ_vars = os.environ.copy()
 
         p = subprocess.Popen(cmds, stdout=stdout, stderr=stderr,
-                             cwd=None, shell=True)
+                             cwd=None)
         
         while p.poll() is None:
             line = p.stdout.readline()
