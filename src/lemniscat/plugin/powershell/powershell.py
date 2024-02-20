@@ -45,7 +45,7 @@ class Powershell:
             error = p.stderr.readline()
             if(line != b''):
                 ltrace = line.decode('utf-8').rstrip('\r\n')
-                m = re.match(r"^\[lemniscat\.pushvar(?P<secret>\.secret)\] (?P<key>\w+)=(?P<value>.*)", str(ltrace))
+                m = re.match(r"^\[lemniscat\.pushvar(?P<secret>\.secret)?\] (?P<key>\w+)=(?P<value>.*)", str(ltrace))
                 if(not m is None):
                     if(m.group('secret') == '.secret'):
                         outputVar[m.group('key').strip()] = VariableValue(m.group('value').strip(), True)
