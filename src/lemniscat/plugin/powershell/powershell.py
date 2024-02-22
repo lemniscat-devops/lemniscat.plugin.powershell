@@ -52,7 +52,7 @@ class Powershell:
                     else:
                         outputVar[m.group('key').strip()] = VariableValue(m.group('value').strip())
                 else:
-                    log.debug(f'  {ltrace}')
+                    log.info(f'  {ltrace}')
             if(error != b''):
                 etrace = error.decode("utf-8").rstrip("\r\n")
                 log.error(f'  {etrace}')
