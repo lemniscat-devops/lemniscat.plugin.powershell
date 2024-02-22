@@ -8,6 +8,7 @@ from logging import Logger
 from lemniscat.core.contract.engine_contract import PluginCore
 from lemniscat.core.model.models import Meta, TaskResult, VariableValue
 from lemniscat.core.util.helpers import FileSystem, LogUtil
+from lemniscat.plugin.powershell.filestore import FileStore
 
 from lemniscat.plugin.powershell.powershell import Powershell
 
@@ -41,10 +42,40 @@ class Action(PluginCore):
                         self._logger.debug(f"Variable not found: {var}. Replaced by empty string.")
         return script    
 
+    def __prepareVariables(self, variables: dict, withSecrets: bool = False) -> dict:
+        result = {}
+        
+        for key in variables:
+            if(withSecrets is True):
+                result[key] = variables[key].value
+            else:
+                if(not variables[key].sensitive):
+                    result[key] = variables[key].value
+        return result
+
     def __run_powershell(self, parameters: dict = {}, variables: dict = {}) -> TaskResult:
         # launch powershell command
         pwsh = Powershell()
         result = {}
+        if(parameters.get('storeVariablesInFile') is not None):
+            config = parameters['storeVariablesInFile']
+            format = 'json'
+            if(config.get('format') is not None):
+                format = config['format']
+            withSecrets = False
+            if(config.get('withSecrets') is not None):
+                withSecrets = config['withSecrets']
+            file = FileStore()
+            vars = self.__prepareVariables(variables, withSecrets)
+            if(format == 'json'):
+                file.saveJsonFile(f'{os.getcwd()}/vars.json', vars)
+                self._logger.info(f'Variables saved to {os.getcwd()}/vars.json')
+            elif(format == 'yaml'):
+                file.saveYamlFile(f'{os.getcwd()}/vars.yaml', vars)
+                self._logger.info(f'Variables saved to {os.getcwd()}/vars.json')
+            else:
+                raise ValueError(f'Format {format} is not supported.')
+        
         if(parameters['type'] == 'inline'):
             script = self.__interpret(parameters['script'], variables)
             self._logger.debug("---------------------------")
