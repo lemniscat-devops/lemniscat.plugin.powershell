@@ -90,8 +90,8 @@ class Action(PluginCore):
         )
         
 
-    def invoke(self, params: dict = {}, variables: dict = {}) -> TaskResult:
-        super().invoke(params, variables)
+    def invoke(self, parameters: dict = {}, variables: dict = {}) -> TaskResult:
+        super().invoke(parameters, variables)
         self._logger.debug(f'Run {self.parameters["type"]} -> {self.meta}')
         task = self.__run_powershell()
         return task
