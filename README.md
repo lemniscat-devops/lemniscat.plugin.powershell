@@ -11,7 +11,7 @@ In order to use this plugin, you need to add plugin into the required section of
 ```yaml
 requirements:
   - name: lemniscat.plugin.powershell
-    version: 0.2.0
+    version: 0.1.0
 ```
 
 ### Running powershell commands
