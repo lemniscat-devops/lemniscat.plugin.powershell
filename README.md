@@ -110,3 +110,14 @@ For example:
 ```powershell
 Write-Host "[lemniscat.pushvar.secret] storageAccountKey=$storageAccountKey"
 ```
+
+By default all variable are considered as string. If you want to specify the type of the variable, you can add the type after the variable name like this:
+`[lemniscat.pushvar(<variableType>)] <variableName>=<variableValue>`
+
+`variableType` can be `string`, `int`, `bool`, `float`, `json` (for complexe object)
+
+For example:
+
+```powershell
+Write-Host "[lemniscat.pushvar(int)] numberOfFiles=$numberOfFiles"
+```
