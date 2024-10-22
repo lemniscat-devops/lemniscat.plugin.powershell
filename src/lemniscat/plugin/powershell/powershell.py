@@ -70,7 +70,7 @@ class Powershell:
                             value = json.loads(value)
                         elif(m.group('outputType') == 'int'):
                             value = int(value)
-                        elif(m.group('outputType') == 'boolean'):
+                        elif(m.group('outputType') == 'bool'):
                             value = value.lower() == 'true'
                         elif(m.group('outputType') == 'float'):
                             value = float(value)
