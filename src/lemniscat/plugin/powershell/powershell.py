@@ -20,8 +20,11 @@ except ImportError:
 
 def enqueue_stream(stream, queue, type):
     for line in iter(stream.readline, b''):
-        queue.put(str(type) + line.decode('utf-8').rstrip('\r\n'))
-
+        try:
+            queue.put(str(type) + line.decode('utf-8').rstrip('\r\n'))
+        except UnicodeDecodeError:
+            log.warning("%r not UTF-8 decodable -- skipping" % line)
+            continue
 def enqueue_process(process, queue):
     process.wait()
     queue.put('x')
@@ -38,7 +41,6 @@ class Powershell:
         capture_output = kwargs.pop('capture_output', True)
         stderr = subprocess.PIPE
         stdout = subprocess.PIPE
-            
 
         p = subprocess.Popen(cmds, stdout=stdout, stderr=stderr,
                              cwd=None)
